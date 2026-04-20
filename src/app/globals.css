@@ -1,26 +1,453 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   ATELIER — BillForge 2026 Design System
+   Editorial warm-paper palette + electric tangerine accent.
+   ============================================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Surfaces */
+  --color-paper: #f6f2ea;
+  --color-paper-soft: #fbf8f1;
+  --color-paper-deep: #efe9dc;
+  --color-ink: #15130f;
+  --color-ink-2: #2c2924;
+  --color-ink-muted: #5c5851;
+  --color-ink-subtle: #75716a;
+  --color-hairline: #e3ddca;
+  --color-hairline-strong: #cfc7af;
+
+  /* Accent */
+  --color-accent: #ff5a1f;
+  --color-accent-hover: #e84a10;
+  --color-accent-soft: #ffe2d2;
+  --color-accent-ink: #7a2a09;
+
+  /* Semantic */
+  --color-success: #1f6f3b;
+  --color-success-soft: #d6ecdb;
+  --color-warning: #a56308;
+  --color-warning-soft: #f6e5c4;
+  --color-danger: #a8221a;
+  --color-danger-soft: #f3d6d2;
+  --color-info: #1d4e89;
+  --color-info-soft: #d5e0ee;
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-instrument-serif);
+
+  /* shadcn map */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.5rem;
+  --background: #f6f2ea;
+  --foreground: #15130f;
+  --card: #fbf8f1;
+  --card-foreground: #15130f;
+  --popover: #fbf8f1;
+  --popover-foreground: #15130f;
+  --primary: #15130f;
+  --primary-foreground: #f6f2ea;
+  --secondary: #efe9dc;
+  --secondary-foreground: #15130f;
+  --muted: #efe9dc;
+  --muted-foreground: #5c5851;
+  --accent: #ffe2d2;
+  --accent-foreground: #7a2a09;
+  --destructive: #a8221a;
+  --border: #e3ddca;
+  --input: #e3ddca;
+  --ring: #ff5a1f;
+  --chart-1: #ff5a1f;
+  --chart-2: #1d4e89;
+  --chart-3: #1f6f3b;
+  --chart-4: #a56308;
+  --chart-5: #6e3aa3;
+  --sidebar: #fbf8f1;
+  --sidebar-foreground: #15130f;
+  --sidebar-primary: #ff5a1f;
+  --sidebar-primary-foreground: #fbf8f1;
+  --sidebar-accent: #efe9dc;
+  --sidebar-accent-foreground: #15130f;
+  --sidebar-border: #e3ddca;
+  --sidebar-ring: #ff5a1f;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-hairline);
+  }
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-feature-settings: "ss01", "ss02", "cv11";
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  /* Number tabular for currencies */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+.font-display {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.display-hero {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+.display-xl {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.display-lg {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+}
+
+.italic-display {
+  font-style: italic;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+}
+
+.numeral {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   PANEL / CARD primitives
+   ============================================================ */
+
+.panel {
+  background: var(--color-paper-soft);
+  border: 1px solid var(--color-hairline);
+  border-radius: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.panel-hover:hover {
+  border-color: var(--color-hairline-strong);
+  box-shadow: 0 1px 0 var(--color-paper-deep), 0 12px 30px -18px rgba(21, 19, 15, 0.18);
+}
+
+.panel-flat {
+  background: transparent;
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+}
+
+.panel-deep {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: 14px;
+  border: 1px solid var(--color-ink);
+}
+
+.divider-h {
+  height: 1px;
+  background: var(--color-hairline);
+}
+
+/* ============================================================
+   BACKGROUNDS — paper grain, hairline grid
+   ============================================================ */
+
+.paper-grain {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(rgba(21, 19, 15, 0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.paper-noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+}
+
+.hairline-grid {
+  background-image:
+    linear-gradient(to right, var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-hairline) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   ACCENT INK (underline, highlight)
+   ============================================================ */
+
+.accent-underline {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.accent-underline::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 6%;
+  height: 0.32em;
+  background: var(--color-accent);
+  z-index: -1;
+  border-radius: 2px;
+  transform: rotate(-0.7deg);
+}
+
+.accent-mark {
+  background: linear-gradient(180deg, transparent 60%, var(--color-accent-soft) 60%);
+  padding: 0 0.05em;
+}
+
+/* ============================================================
+   STATUS pill
+   ============================================================ */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid;
+  font-variant-numeric: tabular-nums;
+}
+.pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.85;
+}
+.pill-draft  { background: #efe9dc; color: var(--color-ink-muted); border-color: var(--color-hairline-strong); }
+.pill-sent   { background: var(--color-info-soft);    color: var(--color-info);    border-color: color-mix(in srgb, var(--color-info) 25%, transparent); }
+.pill-viewed { background: #ece4f3;                   color: #6e3aa3;              border-color: #d3c0e0; }
+.pill-paid   { background: var(--color-success-soft); color: var(--color-success); border-color: color-mix(in srgb, var(--color-success) 25%, transparent); }
+.pill-overdue{ background: var(--color-danger-soft);  color: var(--color-danger);  border-color: color-mix(in srgb, var(--color-danger) 25%, transparent); }
+.pill-cancelled{ background: #efe9dc; color: var(--color-ink-subtle); border-color: var(--color-hairline-strong); }
+
+/* ============================================================
+   BUTTON tweaks (override shadcn defaults to fit theme)
+   ============================================================ */
+
+.btn-accent {
+  background: var(--color-accent);
+  color: white;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  border-radius: 10px;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 0 rgba(21, 19, 15, 0.06), 0 6px 16px -8px rgba(255, 90, 31, 0.45);
+}
+.btn-accent:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(21, 19, 15, 0.08), 0 10px 22px -10px rgba(255, 90, 31, 0.55);
+}
+.btn-accent:active { transform: translateY(0); }
+
+.btn-ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-weight: 500;
+  border-radius: 10px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.btn-ink:hover { background: var(--color-ink-2); transform: translateY(-1px); }
+
+.btn-ghost-ink {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: 10px;
+  font-weight: 500;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn-ghost-ink:hover { background: var(--color-paper-soft); border-color: var(--color-ink-muted); }
+
+/* ============================================================
+   INPUT tweaks
+   ============================================================ */
+
+.field {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  background: var(--color-paper-soft);
+  border: 1px solid var(--color-hairline);
+  border-radius: 10px;
+  color: var(--color-ink);
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  outline: none;
+}
+.field::placeholder { color: var(--color-ink-subtle); }
+.field:focus {
+  border-color: var(--color-ink);
+  background: var(--color-paper);
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.18);
+}
+.field:disabled { opacity: 0.5; cursor: not-allowed; }
+
+textarea.field { height: auto; padding: 12px 14px; line-height: 1.5; resize: vertical; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes shimmer-bg {
+  0% { background-position: -300px 0; }
+  100% { background-position: 300px 0; }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 90, 31, 0.35); }
+  70% { box-shadow: 0 0 0 14px rgba(255, 90, 31, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 90, 31, 0); }
+}
+
+.animate-rise { animation: rise 0.6s cubic-bezier(.2,.7,.2,1) both; }
+.animate-fade { animation: fade 0.4s ease-out both; }
+.animate-blink { animation: blink 1.4s ease-in-out infinite; }
+.animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+.delay-50  { animation-delay: 50ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-paper-deep) 0%, var(--color-paper-soft) 50%, var(--color-paper-deep) 100%);
+  background-size: 600px 100%;
+  animation: shimmer-bg 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

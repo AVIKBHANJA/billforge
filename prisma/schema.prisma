@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["billforge"]
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  clients       Client[]
+  invoices      Invoice[]
+  timeEntries   TimeEntry[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@schema("billforge")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@schema("billforge")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("billforge")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@schema("billforge")
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  userId    String
+  name      String
+  email     String
+  company   String?
+  phone     String?
+  address   String?
+  notes     String?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@schema("billforge")
+}
+
+model Project {
+  id          String      @id @default(cuid())
+  clientId    String
+  name        String
+  description String?
+  hourlyRate  Float?
+  client      Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  invoices    Invoice[]
+  timeEntries TimeEntry[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@schema("billforge")
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  userId        String
+  clientId      String
+  projectId     String?
+  invoiceNumber String
+  status        InvoiceStatus @default(DRAFT)
+  issueDate     DateTime      @default(now())
+  dueDate       DateTime
+  subtotal      Float
+  tax           Float         @default(0)
+  total         Float
+  currency      String        @default("INR")
+  notes         String?
+  paidAt        DateTime?
+  paymentLink   String?
+  pdfUrl        String?
+  recurring     Boolean       @default(false)
+  recurInterval String?
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project       Project?      @relation(fields: [projectId], references: [id])
+  items         InvoiceItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@schema("billforge")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  VIEWED
+  PAID
+  OVERDUE
+  CANCELLED
+
+  @@schema("billforge")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  description String
+  quantity    Float
+  rate        Float
+  amount      Float
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@schema("billforge")
+}
+
+model TimeEntry {
+  id        String    @id @default(cuid())
+  userId    String
+  projectId String
+  description String?
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int?
+  billable  Boolean   @default(true)
+  billed    Boolean   @default(false)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@schema("billforge")
+}

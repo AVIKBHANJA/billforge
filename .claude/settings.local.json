@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 skills/ui-ux-pro-max/scripts/search.py \"fintech invoicing SaaS premium dark glassmorphism\" --design-system -p \"BillForge\")",
+      "Bash(python \"/c/Users/avikb/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"fintech invoicing SaaS premium dark glassmorphism\" --design-system -p \"BillForge\")",
+      "Bash(where python:*)",
+      "Read(//c/Program Files/Python313//**)",
+      "Bash(/c/Program Files/Python313/python.exe:*)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
+    ]
+  }
+}
