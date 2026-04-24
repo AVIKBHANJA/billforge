@@ -1,6 +1,14 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+function getResend() {
+  if (!resendClient) {
+    const key = process.env.RESEND_API_KEY;
+    if (!key) throw new Error("RESEND_API_KEY is not set");
+    resendClient = new Resend(key);
+  }
+  return resendClient;
+}
 
 export async function sendInvoiceEmail({
   to,
@@ -19,7 +27,7 @@ export async function sendInvoiceEmail({
   paymentLink?: string;
   fromName: string;
 }) {
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: `${fromName} via BillForge <invoices@billforge.app>`,
     to,
     subject: `Invoice ${invoiceNumber} - ${currency} ${amount.toFixed(2)}`,
