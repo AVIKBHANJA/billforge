@@ -12,5 +12,9 @@
       "Bash(npx tsc *)",
       "Bash(npm run *)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "stitch",
+    "supabase"
+  ]
 }

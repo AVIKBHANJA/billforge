@@ -1,67 +1,28 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
-  schemas  = ["billforge"]
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "auth"]
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  password      String?
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  clients       Client[]
-  invoices      Invoice[]
-  timeEntries   TimeEntry[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          String      @id // Supabase auth user UUID
+  name        String?
+  email       String      @unique
+  image       String?
+  clients     Client[]
+  invoices    Invoice[]
+  timeEntries TimeEntry[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
-  @@schema("billforge")
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@schema("billforge")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@schema("billforge")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@schema("billforge")
+  @@map("billforge_users")
+  @@schema("public")
 }
 
 model Client {
@@ -79,7 +40,9 @@ model Client {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  @@schema("billforge")
+  @@index([userId, createdAt])
+  @@map("billforge_clients")
+  @@schema("public")
 }
 
 model Project {
@@ -94,7 +57,9 @@ model Project {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  @@schema("billforge")
+  @@index([clientId])
+  @@map("billforge_projects")
+  @@schema("public")
 }
 
 model Invoice {
@@ -123,7 +88,11 @@ model Invoice {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
-  @@schema("billforge")
+  @@unique([userId, invoiceNumber])
+  @@index([userId, createdAt])
+  @@index([userId, status])
+  @@index([dueDate])
+  @@map("billforge_invoices")
 }
 
 enum InvoiceStatus {
@@ -134,7 +103,7 @@ enum InvoiceStatus {
   OVERDUE
   CANCELLED
 
-  @@schema("billforge")
+  @@map("billforge_invoice_status")
 }
 
 model InvoiceItem {
@@ -146,23 +115,26 @@ model InvoiceItem {
   amount      Float
   invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
-  @@schema("billforge")
+  @@index([invoiceId])
+  @@map("billforge_invoice_items")
 }
 
 model TimeEntry {
-  id        String    @id @default(cuid())
-  userId    String
-  projectId String
+  id          String    @id @default(cuid())
+  userId      String
+  projectId   String
   description String?
-  startTime DateTime
-  endTime   DateTime?
-  duration  Int?
-  billable  Boolean   @default(true)
-  billed    Boolean   @default(false)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int?
+  billable    Boolean   @default(true)
+  billed      Boolean   @default(false)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  @@schema("billforge")
+  @@index([userId, startTime])
+  @@index([projectId, billed])
+  @@map("billforge_time_entries")
 }
