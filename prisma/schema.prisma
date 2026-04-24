@@ -1,12 +1,10 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "../src/generated/prisma"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
   schemas  = ["public", "auth"]
 }
 
@@ -93,6 +91,7 @@ model Invoice {
   @@index([userId, status])
   @@index([dueDate])
   @@map("billforge_invoices")
+  @@schema("public")
 }
 
 enum InvoiceStatus {
@@ -104,6 +103,7 @@ enum InvoiceStatus {
   CANCELLED
 
   @@map("billforge_invoice_status")
+  @@schema("public")
 }
 
 model InvoiceItem {
@@ -117,6 +117,7 @@ model InvoiceItem {
 
   @@index([invoiceId])
   @@map("billforge_invoice_items")
+  @@schema("public")
 }
 
 model TimeEntry {
@@ -137,4 +138,5 @@ model TimeEntry {
   @@index([userId, startTime])
   @@index([projectId, billed])
   @@map("billforge_time_entries")
+  @@schema("public")
 }
